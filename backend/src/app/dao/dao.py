@@ -4,8 +4,8 @@ from sqlalchemy.orm import selectinload
 from pydantic import BaseModel
 
 from .base_dao import BaseDAO
-from ..models import Author, Publisher, Tag, Title, Genre
-from ..db.database import connection
+from ..models import Author, Publisher, Tag, Title, Genre, User
+from ..db import connection
 
 
 class AuthorDAO(BaseDAO[Author]):
@@ -112,12 +112,9 @@ class TitleDAO(BaseDAO[Title]):
         publisher_id = values.pop("publisher_id")
         publisher = await PublisherDAO.get_by_id(model_id=publisher_id)
 
-        new_title = cls.model(**values)
-        new_title.genres.extend(genres)
-        new_title.tags.extend(tags)
-        new_title.author = author
-        new_title.publisher = publisher
-
+        new_title = cls.model(
+            **values, author=author, publisher=publisher, genres=genres, tags=tags
+        )
         session.add(new_title)
         try:
             await session.commit()
@@ -133,3 +130,15 @@ class TagDAO(BaseDAO[Tag]):
 
 class GenreDAO(BaseDAO[Genre]):
     model = Genre
+
+
+class UserDAO(BaseDAO[User]):
+    model = User
+
+    @classmethod
+    @connection
+    async def get_by_email(cls, session: AsyncSession, model_email: str):
+        query = select(cls.model).filter_by(email=model_email)
+        result = await session.execute(query)
+        info_one = result.scalar_one_or_none()
+        return info_one

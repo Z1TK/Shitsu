@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from fastapi import HTTPException
 from uuid import UUID
 
-from ..db.database import connection
+from ..db import connection
 from ..db import Base
 
 
@@ -43,6 +43,7 @@ class BaseDAO[T: Base]:
         session.add(new_instance)
         try:
             await session.commit()
+            await session.refresh(new_instance)
         except Exception as e:
             await session.rollback()
             raise e

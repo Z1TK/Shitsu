@@ -14,7 +14,7 @@ class Author(Base):
     )
     name: Mapped[str] = mapped_column(String(255), unique=True)
     slug: Mapped[str] = mapped_column(String(255), unique=True)
-    pseodunym: Mapped[str] = mapped_column(String(255), unique=True, nullable=True)
+    pseudunym: Mapped[str] = mapped_column(String(255), unique=True, nullable=True)
     description: Mapped[str] = mapped_column(Text, nullable=True)
     image: Mapped[str] = mapped_column(String(2048), nullable=True)
     titles: Mapped[list["Title"]] = relationship(

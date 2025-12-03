@@ -9,6 +9,7 @@ engine = create_async_engine(DATABASE_URL)
 
 async_session_marker = async_sessionmaker(engine, expire_on_commit=False)
 
+
 def connection(method):
     @wraps(method)
     async def wrapper(*args, **kwargs):
@@ -22,4 +23,3 @@ def connection(method):
                 await session.close()
 
     return wrapper
-

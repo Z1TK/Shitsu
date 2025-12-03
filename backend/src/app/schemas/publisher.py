@@ -11,7 +11,7 @@ class PublisherCreateSchema(BaseModel):
     name: Annotated[str, Field(max_length=255)]
     another_name: Annotated[str | None, Field(max_length=255, default=None)]
     description: Annotated[str | None, Field(default=None)]
-    image: Annotated[str | None, Field(max_length=2048, default=None)]
+    image: Annotated[str | None, Field(default=None)]
 
 
 class PublisherUpdateSchema(BaseModel):
@@ -20,7 +20,7 @@ class PublisherUpdateSchema(BaseModel):
     name: Annotated[str, Field(max_length=255)] = None
     another_name: Annotated[str | None, Field(max_length=255)] = None
     description: Annotated[str | None, Field()] = None
-    image: Annotated[str | None, Field(max_length=2048)] = None
+    image: Annotated[str | None, Field()] = None
 
 
 class PublisherReadSchema(PublisherCreateSchema):
@@ -32,5 +32,4 @@ class PublisherReadSchema(PublisherCreateSchema):
 class PublisherIdschema(PublisherReadSchema):
     model_config = ConfigDict(from_attributes=True)
 
-    titles: list['TitleReadAllSchema']
-
+    titles: list["TitleReadAllSchema"]

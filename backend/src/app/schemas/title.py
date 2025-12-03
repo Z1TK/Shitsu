@@ -3,6 +3,7 @@ import uuid
 from typing import Annotated
 
 from ..enum import *
+
 # from .author import AuthorTitleSchema
 # from .publisher import PublisherTitleSchema
 # from .genre import GenreReadSchema
@@ -14,7 +15,7 @@ class TitleReadAllSchema(BaseModel):
 
     id: Annotated[int, Field()]
     title: Annotated[str, Field(max_length=255)]
-    cover: Annotated[str, Field(max_length=255)]
+    cover: Annotated[str, Field()]
 
 
 class TitleCreateSchema(BaseModel):
@@ -23,7 +24,7 @@ class TitleCreateSchema(BaseModel):
     title: Annotated[str, Field(max_length=255)]
     description: Annotated[str, Field()]
     alternative_title: Annotated[str | None, Field(max_length=255, default=None)]
-    cover: Annotated[str, Field(max_length=255)]
+    cover: Annotated[str, Field()]
     release_year: Annotated[int, Field()]
     type: Annotated[TypeEnum, Field()]
     status: Annotated[StatusEnum, Field()]
@@ -46,7 +47,7 @@ class AuthorTitleSchema(BaseModel):
 
     id: Annotated[uuid.UUID, Field()]
     name: Annotated[str, Field(max_length=255)]
-    
+
 
 class TitleReadIDSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True, use_enum_values=True)
@@ -55,15 +56,15 @@ class TitleReadIDSchema(BaseModel):
     title: Annotated[str, Field(max_length=255)]
     description: Annotated[str, Field()]
     alternative_title: Annotated[str | None, Field(max_length=255)]
-    cover: Annotated[str, Field(max_length=255)]
+    cover: Annotated[str, Field()]
     release_year: Annotated[int, Field()]
     type: Annotated[TypeEnum, Field()]
     status: Annotated[StatusEnum, Field()]
     release_format: Annotated[ReleaseEnum, Field()]
     author: AuthorTitleSchema
     publisher: PublisherTitleSchema
-    genres: list['GenreReadSchema']
-    tags: list['TagReadSchema']
+    genres: list["GenreReadSchema"]
+    tags: list["TagReadSchema"]
 
 
 class TitleUpdateSchema(BaseModel):

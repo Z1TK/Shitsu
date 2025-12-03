@@ -4,9 +4,10 @@ from typing import Annotated
 from ...app.schemas import GenreReadSchema
 from ...app.dao import GenreDAO
 
-genre = APIRouter(prefix='/genres')
+genre = APIRouter(prefix="/genres")
 
-@genre.get('')
+
+@genre.get("")
 async def get_all(
     page: Annotated[int, Query(ge=1)] = 1,
     limit: Annotated[int, Query(ge=1, gl=100)] = 10,

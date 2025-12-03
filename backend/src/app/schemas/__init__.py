@@ -18,6 +18,7 @@ from .title import (
     TitleReadIDSchema,
     TitleUpdateSchema,
 )
+from .user import LoginUser, Token, UserRead, RegisterSchema
 
 AuthorIdSchema.model_rebuild()
 PublisherIdschema.model_rebuild()
