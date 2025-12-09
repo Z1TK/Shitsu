@@ -5,7 +5,7 @@ from fastapi import Request, HTTPException, status, Response
 from ...core.config import settings
 
 
-def create_access_token(data: dict, expires_delta: timedelta):
+def create_token(data: dict, expires_delta: timedelta):
     to_encode = data.copy()
     expire = datetime.now(timezone.utc) + expires_delta
     to_encode.update({"exp": expire})
@@ -15,16 +15,8 @@ def create_access_token(data: dict, expires_delta: timedelta):
     return encode_jwt
 
 
-def get_access_token(req: Request):
-    token = req.cookies.get("access_token")
-    if not token:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST, detail="Token not found"
-        )
-    return token
-
-def get_refresh_token(req: Request):
-    token = req.cookies.get("refresh_token")
+def get_token(req: Request, token_name: str):
+    token = req.cookies.get(token_name)
     if not token:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST, detail="Token not found"
@@ -56,22 +48,18 @@ def validate_token(token: str):
 
     return user_id
 
-def set_tokens_and_cookies(res: Response, id: str):
-    access_token_expire = timedelta(minutes=settings.ACCESS_TIME)
-    refresh_token_expire = timedelta(days=settings.REFRESH_TIME)
+def set_cookies(res: Response, user_id: str, token_name: str, max_age: int):
+    if token_name == 'access_token':
+        token_expire = timedelta(minutes=settings.ACCESS_TIME)
+    else:
+        token_expire = timedelta(days=settings.REFRESH_TIME)
 
-    access_token = create_access_token(
-        data={"sub": str(id)}, expires_delta=access_token_expire
-    )
-    refresh_token = create_access_token(
-        data={"sub": str(id)}, expires_delta=refresh_token_expire
+    token = create_token(
+        data={'sub': str(user_id)}, expires_delta=token_expire
     )
 
     res.set_cookie(
-        key="access_token", value=access_token, httponly=True, max_age=420
-    )
-    res.set_cookie(
-        key="refresh_token", value=refresh_token, httponly=True, max_age=1296000
+        key=token_name, value=token, httponly=True, max_age=max_age
     )
 
-    return access_token, refresh_token
+    return token

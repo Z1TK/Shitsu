@@ -1,11 +1,11 @@
-from fastapi import HTTPException, status, Depends
+from fastapi import HTTPException, status, Depends, Request
 from pydantic import EmailStr
 import jwt
 from datetime import datetime, timezone
 
 from .password import verify_password
 from ..dao.dao import UserDAO
-from .token import get_access_token, get_refresh_token, validate_token
+from .token import get_token, validate_token
 from ...core.config import settings
 
 
@@ -19,8 +19,10 @@ async def authenticate_user(email: EmailStr, password: str):
     return user
 
 
-def current_user(token: str = Depends(get_access_token)):
+def current_access_token(req: Request):
+    token = get_token(req, 'access_token')
     return validate_token(token)
 
-def update_access_token(token: str = Depends(get_refresh_token)):
+def current_refresh_token(req: Request):
+    token = get_token(req, 'refresh_token')
     return validate_token(token)
