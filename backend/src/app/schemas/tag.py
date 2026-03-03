@@ -1,5 +1,6 @@
-from pydantic import BaseModel, ConfigDict, Field
 from typing import Annotated
+
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class TagReadSchema(BaseModel):

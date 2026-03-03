@@ -1,8 +1,9 @@
-from pydantic import BaseModel, ConfigDict, Field
 import uuid
 from typing import Annotated
 
-from ..enum import *
+from pydantic import BaseModel, ConfigDict, Field
+
+from backend.src.app.enum.title_enum import *
 
 # from .author import AuthorTitleSchema
 # from .publisher import PublisherTitleSchema

@@ -1,7 +1,9 @@
 from datetime import datetime
+
 from sqlalchemy import func
-from sqlalchemy.orm import DeclarativeBase, declared_attr, Mapped, mapped_column
 from sqlalchemy.ext.asyncio import AsyncAttrs
+from sqlalchemy.orm import (DeclarativeBase, Mapped, declared_attr,
+                            mapped_column)
 
 
 class Base(DeclarativeBase, AsyncAttrs):

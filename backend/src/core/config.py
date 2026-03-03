@@ -1,5 +1,6 @@
-from pydantic_settings import SettingsConfigDict, BaseSettings
 import os
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class Settings(BaseSettings):
@@ -19,13 +20,16 @@ class Settings(BaseSettings):
     REFRESH_TIME: int
 
     model_config = SettingsConfigDict(
-        env_file=os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../", ".env"))
+        env_file=os.path.abspath(
+            os.path.join(os.path.dirname(__file__), "../../../", ".env")
+        )
     )
 
     def get_db_url(self):
         return f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}@{self.DB_HOST}:{self.DB_PORT}/{self.POSTGRES_DB}"
 
     def get_redis_url(self):
-        return f'redis://{self.REDIS_HOST}:{self.REDIS_PORT}/0'
+        return f"redis://{self.REDIS_HOST}:{self.REDIS_PORT}/0"
+
 
 settings = Settings()

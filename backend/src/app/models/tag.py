@@ -1,9 +1,9 @@
-from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from ..db import Base
-from .association_tables import tag_title_table
+from backend.src.app.models.association_tables import tag_title_table
+from backend.src.app.models.base_mode import Base
 
 
 class Tag(Base):

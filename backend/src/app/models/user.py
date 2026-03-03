@@ -1,9 +1,10 @@
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import String, event
 import uuid
 
-from ..db import Base
+from sqlalchemy import String, event
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import Mapped, mapped_column
+
+from backend.src.app.models.base_mode import Base
 
 
 class User(Base):

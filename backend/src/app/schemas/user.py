@@ -1,7 +1,8 @@
-from pydantic import BaseModel, EmailStr, ConfigDict, Field, field_validator
-from typing import Annotated
 import re
 import uuid
+from typing import Annotated
+
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
 
 class LoginUser(BaseModel):

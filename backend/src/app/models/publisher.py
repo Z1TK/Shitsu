@@ -1,10 +1,11 @@
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import Text, event, String, inspect
-from sqlalchemy.dialects.postgresql import UUID
 import uuid
-from slugify import slugify
 
-from ..db import Base
+from slugify import slugify
+from sqlalchemy import String, Text, event, inspect
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from backend.src.app.models.base_mode import Base
 
 
 class Publisher(Base):

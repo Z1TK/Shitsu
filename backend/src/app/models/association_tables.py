@@ -1,6 +1,6 @@
-from sqlalchemy import Column, Table, ForeignKey
+from sqlalchemy import Column, ForeignKey, Table
 
-from ..db import Base
+from backend.src.app.models.base_mode import Base
 
 genre_title_table = Table(
     "genre_title_table",

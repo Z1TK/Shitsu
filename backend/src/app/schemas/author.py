@@ -1,8 +1,9 @@
-from pydantic import BaseModel, ConfigDict, Field
-from typing import Annotated
 import uuid
+from typing import Annotated
 
-# from .title import TitleReadAllSchema
+from pydantic import BaseModel, ConfigDict, Field
+
+from backend.src.app.schemas.title import TitleReadAllSchema
 
 
 class AuthorCreateSchema(BaseModel):

@@ -1,12 +1,17 @@
-from sqlalchemy.orm import Mapped, mapped_column, validates, relationship
-from sqlalchemy import ForeignKey, Text, event, Integer, String, inspect
-from sqlalchemy.dialects.postgresql import UUID
 import uuid
-from slugify import slugify
 
-from .association_tables import genre_title_table, tag_title_table
-from ..db import Base
-from ..enum import *
+from slugify import slugify
+from sqlalchemy import ForeignKey, Integer, String, Text, event, inspect
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
+
+from backend.src.app.enum.title_enum import *
+from backend.src.app.models.association_tables import (genre_title_table,
+                                                       tag_title_table)
+from backend.src.app.models.base_mode import Base
+from backend.src.app.models.genre import Genre
+from backend.src.app.models.publisher import Publisher
+from backend.src.app.models.tag import Tag
 
 
 class Title(Base):
