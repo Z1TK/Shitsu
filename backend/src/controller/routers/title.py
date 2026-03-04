@@ -1,12 +1,9 @@
 from typing import Annotated
 
-from fastapi import APIRouter, HTTPException, Query, status
+from fastapi import APIRouter, Query, status
 from fastapi.responses import JSONResponse
 
-from backend.src.app.schemas.title import (TitleCreateSchema,
-                                           TitleReadAllSchema,
-                                           TitleReadIDSchema,
-                                           TitleUpdateSchema)
+from backend.src.app.schemas.title import TitleCreateSchema, TitleUpdateSchema
 from backend.src.service.title_service import TitleService
 
 title = APIRouter(prefix="/titles")
@@ -32,9 +29,9 @@ async def get_by_id(title_id: int):
     return await TitleService.get_title_by_id(title_id)
 
 
-# @title.post("")
-# async def add(title_data: TitleCreateSchema):
-#     return await TitleService.add_title(title_data)
+@title.post("")
+async def add(title_data: TitleCreateSchema):
+    return await TitleService.add_title(title_data)
 
 
 @title.patch("/{title_id}")

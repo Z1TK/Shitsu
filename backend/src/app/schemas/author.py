@@ -9,19 +9,19 @@ from backend.src.app.schemas.title import TitleReadAllSchema
 class AuthorCreateSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    name: Annotated[str, Field(max_length=255)]
-    pseudunym: Annotated[str | None, Field(max_length=255, default=None)]
-    description: Annotated[str | None, Field(default=None)]
-    image: Annotated[str | None, Field(default=None)]
+    name: str = Field(max_length=255)
+    pseudunym: str | None = Field(max_length=255, default=None)
+    description: str | None = None
+    image: str | None = None
 
 
 class AuthorUpdateSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    name: Annotated[str | None, Field(max_length=255)] = None
-    pseudunym: Annotated[str | None, Field(max_length=255)] = None
-    description: Annotated[str | None, Field()] = None
-    image: Annotated[str | None, Field()] = None
+    name: str | None = Field(max_length=255, default=None)
+    pseudunym: str | None = Field(max_length=255, default=None)
+    description: str | None = None
+    image: str | None = None
 
 
 class AuthorReadSchema(AuthorCreateSchema):

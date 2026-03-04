@@ -3,31 +3,31 @@ from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, Field
 
-# from .title import TitleReadAllSchema
+from backend.src.app.schemas.title import TitleReadAllSchema
 
 
 class PublisherCreateSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    name: Annotated[str, Field(max_length=255)]
-    another_name: Annotated[str | None, Field(max_length=255, default=None)]
-    description: Annotated[str | None, Field(default=None)]
-    image: Annotated[str | None, Field(default=None)]
+    name: str = Field(max_length=255)
+    another_name: str | None = Field(max_length=255, default=None)
+    description: str | None = None
+    image: str | None = None
 
 
 class PublisherUpdateSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    name: Annotated[str, Field(max_length=255)] = None
-    another_name: Annotated[str | None, Field(max_length=255)] = None
-    description: Annotated[str | None, Field()] = None
-    image: Annotated[str | None, Field()] = None
+    name: str | None = Field(max_length=255, default=None)
+    another_name: str | None = Field(max_length=255, default=None)
+    description: str | None = None
+    image: str | None = None
 
 
 class PublisherReadSchema(PublisherCreateSchema):
     model_config = ConfigDict(from_attributes=True)
 
-    id: Annotated[uuid.UUID, Field()]
+    id: uuid.UUID
 
 
 class PublisherIdschema(PublisherReadSchema):

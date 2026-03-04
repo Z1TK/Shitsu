@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -61,3 +61,25 @@ class TitleRepository(BaseRepository[Title]):
         )
         obj = await session.execute(stmt)
         return obj.scalar_one_or_none()
+    
+    @classmethod
+    @connection()
+    async def create(cls, session: AsyncSession, **kwargs):
+        obj = cls.model(**kwargs)
+        session.add(obj)
+        await session.flush()
+        await session.refresh(obj)
+        return obj.id
+    
+    @classmethod
+    @connection()
+    async def update_by_id(cls, session: AsyncSession, model_id: int | str, **kwargs):
+        stmt = (
+            update(cls.model)
+            .where(cls.model.id == model_id)
+            .values(**kwargs)
+            .returning(cls.model.id)
+        )
+        obj = await session.execute(stmt)
+        await session.flush()
+        return obj.scalar_one()

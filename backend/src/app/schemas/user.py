@@ -8,7 +8,7 @@ from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 class LoginUser(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    email: Annotated[EmailStr, Field()]
+    email: EmailStr
     password: Annotated[str, Field(min_length=8, max_length=25)]
 
     @field_validator("email", mode="after")
@@ -23,19 +23,19 @@ class LoginUser(BaseModel):
 class RegisterSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    username: Annotated[str, Field(min_length=3, max_length=25)]
-    email: Annotated[EmailStr, Field(max_length=255)]
-    password: Annotated[str, Field(min_length=8, max_length=25)]
-    avatar: Annotated[str, Field()]
+    username: str = Field(min_length=3, max_length=25)
+    email: EmailStr = Field(max_length=255)
+    password: str = Field(min_length=8, max_length=25)
+    avatar: str
 
 
 class UserRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    id: Annotated[uuid.UUID, Field()]
-    username: Annotated[str, Field(min_length=3, max_length=25)]
-    email: Annotated[EmailStr, Field(max_length=255)]
-    avatar: Annotated[str, Field()]
+    id: uuid.UUID
+    username: str = Field(min_length=3, max_length=25)
+    email: EmailStr = Field(max_length=255)
+    avatar: str
 
 
 class Token(BaseModel):
