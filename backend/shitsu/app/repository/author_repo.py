@@ -12,7 +12,7 @@ class AuthorRepository(BaseRepository[Author]):
 
     @classmethod
     @connection(commit=False)
-    async def get_by_id(cls, session: AsyncSession, model_id: int | str):
+    async def get_by_id(cls, model_id: int | str, session: AsyncSession):
         stmt = (
             select(cls.model)
             .options(selectinload(cls.model.titles))

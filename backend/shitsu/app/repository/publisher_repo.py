@@ -12,7 +12,7 @@ class PublisherRepository(BaseRepository[Publisher]):
 
     @classmethod
     @connection(commit=False)
-    async def get_publisher_title(cls, session: AsyncSession, model_id: int | str):
+    async def get_publisher_title(cls, model_id: int | str, session: AsyncSession):
         stmt = (
             select(cls.model)
             .options(selectinload(cls.model.titles))

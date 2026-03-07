@@ -16,7 +16,6 @@ class TitleRepository(BaseRepository[Title]):
     @connection(commit=False)
     async def get_all(
         cls,
-        session: AsyncSession,
         type: str,
         status: str,
         release_format: str,
@@ -24,6 +23,7 @@ class TitleRepository(BaseRepository[Title]):
         tags: list[int],
         page: int,
         limit: int,
+        session: AsyncSession
     ):
         stmt = select(cls.model)
 
@@ -48,7 +48,7 @@ class TitleRepository(BaseRepository[Title]):
 
     @classmethod
     @connection(commit=False)
-    async def get_by_id(cls, session: AsyncSession, model_id: int):
+    async def get_by_id(cls, model_id: int, session: AsyncSession):
         stmt = (
             select(cls.model)
             .options(

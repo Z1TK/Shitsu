@@ -11,7 +11,7 @@ class UserRepository(BaseRepository[User]):
 
     @classmethod
     @connection(commit=False)
-    async def get_by_email(cls, session: AsyncSession, model_email: str):
+    async def get_by_email(cls, model_email: str, session: AsyncSession):
         stmt = select(cls.model).where(cls.model.email == model_email)
         obj = await session.execute(stmt)
         return obj.scalar_one_or_none()

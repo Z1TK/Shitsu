@@ -14,21 +14,21 @@ class BaseRepository[T: Base]:
 
     @classmethod
     @connection(commit=False)
-    async def get_all(cls, session: AsyncSession, page: int, limit: int):
+    async def get_all(cls, page: int, limit: int, session: AsyncSession,):
         stmt = select(cls.model).offset((page - 1) * limit).limit(limit)
         obj = await session.execute(stmt)
         return obj.scalars().all()
 
     @classmethod
     @connection(commit=False)
-    async def get_by_id(cls, session: AsyncSession, model_id: int | str):
+    async def get_by_id(cls, model_id: int | str, session: AsyncSession):
         stmt = select(cls.model).where(cls.model.id == model_id)
         obj = await session.execute(stmt)
         return obj.scalar_one_or_none()
 
     @classmethod
     @connection(commit=False)
-    async def get_by_ids(cls, session: AsyncSession, ids: list[int]):
+    async def get_by_ids(cls, ids: list[int], session: AsyncSession):
         stmt = select(cls.model).where(cls.model.id.in_(ids))
         obj = await session.execute(stmt)
         return obj.scalars().all()

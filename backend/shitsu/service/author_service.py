@@ -8,6 +8,7 @@ from backend.shitsu.app.schemas.author import (
     AuthorUpdateSchema,
 )
 from backend.shitsu.app.logger import log
+from backend.shitsu.app.utils.decorators import cached
 
 
 class AuthorService:
@@ -18,9 +19,10 @@ class AuthorService:
 class AuthorService:
 
     @staticmethod
+    @cached('cache:author')
     async def get_all_authors(page: int, limit: int):
         log.info(f"Fetching all authors: page={page}, limit={limit}")
-        authors = await AuthorRepository.get_all(page=page, limit=limit)
+        authors = await AuthorRepository.get_all(page, limit)
         if not authors:
             log.warning("No authors found")
             raise HTTPException(status_code=404, detail="Authors not found")

@@ -13,7 +13,7 @@ console_handler.setLevel(logging.INFO)
 console_handler.setFormatter(formatter)
 
 file_handler = RotatingFileHandler(
-    Path(__file__).resolve().parent.parent / "logs", maxBytes=10_000_000, backupCount=3
+    Path(__file__).resolve().parent.parent.parent / "logs.log", maxBytes=10_000_000, backupCount=3
 )
 file_handler.setLevel(logging.DEBUG)
 file_handler.setFormatter(formatter)

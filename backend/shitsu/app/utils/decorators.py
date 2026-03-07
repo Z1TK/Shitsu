@@ -4,6 +4,7 @@ from sqlalchemy.exc import DataError, IntegrityError, NoResultFound, Operational
 
 from backend.shitsu.app.db.database import async_session_marker
 from backend.shitsu.app.logger import log
+from backend.shitsu.app.utils.cache import get_cache, set_cache
 
 
 def connection(commit: bool = True):
@@ -37,4 +38,19 @@ def connection(commit: bool = True):
 
         return wrapper
 
+    return decorator
+
+def cached(prefix: str, expire: int = 300):
+    def decorator(method):
+        @wraps(method)
+        async def wrapper(*args, **kwargs):
+            key = f'{prefix}:{':'.join(str(a) for a in args)}'
+            cache = await get_cache(key)
+
+            if cache:
+                return cache
+            func = await method(*args, **kwargs)
+            await set_cache(key, func, expire)
+            return func
+        return wrapper
     return decorator
