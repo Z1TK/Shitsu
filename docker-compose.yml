@@ -1,14 +1,14 @@
 services:
-  db:
-    image: postgres:latest
-    container_name: db
+  database:
+    image: postgres:16
+    container_name: database
     restart: always
     ports:
       - "5432:5432"
     env_file:
       - .env
     volumes:
-      - postgres_data:/var/lib/postgresql
+      - postgres_data:/var/lib/postgresql/data
 
   backend:
     build: 
@@ -21,7 +21,13 @@ services:
       - "8000:8000"
     container_name: backend
     depends_on:
-      - db
+      - database
+      - redis
+    
+  redis:
+    image: redis:7
+    restart: always
+    container_name: redis
 
 volumes:
   postgres_data:

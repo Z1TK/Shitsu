@@ -1,5 +1,5 @@
-import uuid
 from typing import Annotated
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -27,7 +27,7 @@ class AuthorUpdateSchema(BaseModel):
 class AuthorReadSchema(AuthorCreateSchema):
     model_config = ConfigDict(from_attributes=True)
 
-    id: Annotated[uuid.UUID, Field()]
+    id: Annotated[UUID, Field()]
 
 
 class AuthorIdSchema(AuthorReadSchema):

@@ -11,7 +11,7 @@ class GenreService:
     @staticmethod
     async def get_all_genres(page: int, limit: int):
         log.info(f"Fetching all genres: page={page}, limit={limit}")
-        genres = await GenreRepository.get_all(page=page, limit=limit)
+        genres = await GenreRepository.get_all(page, limit)
         if not genres:
             log.warning("No genres found")
             raise HTTPException(status_code=404, detail="Genres not found")
@@ -24,7 +24,7 @@ class TagService:
     @staticmethod
     async def get_all_tags(page: int, limit: int):
         log.info(f"Fetching all tags: page={page}, limit={limit}")
-        tags = await TagRepository.get_all(page=page, limit=limit)
+        tags = await TagRepository.get_all(page, limit)
         if not tags:
             log.warning("No tags found")
             raise HTTPException(status_code=404, detail="Tags not found")

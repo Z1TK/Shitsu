@@ -5,6 +5,7 @@ from backend.shitsu.app.schemas.user import UserRead, LoginUser, RegisterSchema,
 from backend.shitsu.app.utils.password import hash_password, verify_password
 from backend.shitsu.app.utils.token import set_cookies
 from backend.shitsu.app.logger import log
+from backend.shitsu.app.utils.decorators import cached
 
 
 class UserService:
@@ -13,7 +14,7 @@ class UserService:
     async def register_user(res: Response, dto: RegisterSchema):
         log.info(f"Registering user: email={dto.email}")
         values = dto.model_dump()
-        exist_user = await UserRepository.get_by_email(model_email=values["email"])
+        exist_user = await UserRepository.get_by_email(values["email"])
         if exist_user:
             log.warning(f"User already exists: email={dto.email}")
             return HTTPException(
@@ -31,7 +32,7 @@ class UserService:
     @staticmethod
     async def login_user(res: Response, login_data: LoginUser):
         log.info(f"Login attempt: email={login_data.email}")
-        user = await UserRepository.get_by_email(model_email=login_data.email)
+        user = await UserRepository.get_by_email(login_data.email)
         if not user or verify_password(login_data.password, user.password) is False:
             log.warning(f"Failed login attempt: email={login_data.email}")
             raise HTTPException(
@@ -46,9 +47,10 @@ class UserService:
         )
 
     @staticmethod
+    @cached('cache:user')
     async def get_user(user_id: str):
         log.info(f"Fetching user: id={user_id}")
-        user = await UserRepository.get_by_id(model_id=user_id)
+        user = await UserRepository.get_by_id(user_id)
         log.info(f"Found user: id={user_id}")
         return UserRead.model_validate(user)
 

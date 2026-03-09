@@ -1,4 +1,4 @@
-import uuid
+from uuid import UUID
 from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -25,8 +25,8 @@ class TitleCreateSchema(BaseModel):
     type: TypeEnum
     status: StatusEnum
     release_format: ReleaseEnum
-    author_id: uuid.UUID
-    publisher_id: uuid.UUID
+    author_id: UUID
+    publisher_id: UUID
     genres: list[int]
     tags: list[int]
 
@@ -34,14 +34,14 @@ class TitleCreateSchema(BaseModel):
 class PublisherTitleSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    id: uuid.UUID
+    id: UUID
     name: str = Field(max_length=255)
 
 
 class AuthorTitleSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    id: uuid.UUID
+    id: UUID
     name: str = Field(max_length=255)
 
 
@@ -88,7 +88,7 @@ class TitleUpdateSchema(BaseModel):
     type: TypeEnum | None = None
     status: StatusEnum | None = None
     release_format: ReleaseEnum | None = None
-    author_id: uuid.UUID | None = None
-    publisher_id: uuid.UUID | None = None
+    author_id: UUID | None = None
+    publisher_id: UUID | None = None
     genres: list[int] | None = None
     tags: list[int] | None = None

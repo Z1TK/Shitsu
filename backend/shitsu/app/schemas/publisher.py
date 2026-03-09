@@ -1,4 +1,4 @@
-import uuid
+from uuid import UUID
 from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, Field
@@ -27,7 +27,7 @@ class PublisherUpdateSchema(BaseModel):
 class PublisherReadSchema(PublisherCreateSchema):
     model_config = ConfigDict(from_attributes=True)
 
-    id: uuid.UUID
+    id: UUID
 
 
 class PublisherIdschema(PublisherReadSchema):

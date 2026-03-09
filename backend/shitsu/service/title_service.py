@@ -9,11 +9,14 @@ from backend.shitsu.app.schemas.title import (
     TitleUpdateSchema,
 )
 from backend.shitsu.app.logger import log
+from backend.shitsu.app.utils.decorators import cached
+from backend.shitsu.app.utils.cache import delete_cache, delete_pattern_cache
 
 
 class TitleService:
 
     @staticmethod
+    @cached('cache:titles')
     async def get_all_titles(
         page: int,
         limit: int,
@@ -27,13 +30,13 @@ class TitleService:
             f"Fetching all titles: page={page}, limit={limit}, type={type}, status={status}, release_format={release_format}, genres={genres}, tags={tags}"
         )
         titles = await TitleRepository.get_all(
-            page=page,
-            limit=limit,
-            type=type,
-            status=status,
-            release_format=release_format,
-            genres=genres,
-            tags=tags,
+            page,
+            limit,
+            type,
+            status,
+            release_format,
+            genres,
+            tags,
         )
         if not titles:
             log.warning("No titles found")
@@ -44,6 +47,7 @@ class TitleService:
         ]
 
     @staticmethod
+    @cached('cache:title')
     async def get_title_by_id(title_id: str):
         log.info(f"Fetching title by id={title_id}")
         title = await TitleRepository.get_by_id(model_id=title_id)
@@ -65,6 +69,7 @@ class TitleService:
         if not title_id:
             log.error("Failed to create title")
             raise HTTPException(status_code=400, detail="Failed to create title")
+        await delete_pattern_cache('cache:titles:*')
         log.info(f"Title created successfully: id={title_id}")
         return {"id": title_id}
 
@@ -76,6 +81,8 @@ class TitleService:
         if not title_id:
             log.warning(f"Title id={id} not found for update")
             raise HTTPException(status_code=404, detail="Title not found")
+        await delete_cache(f'cache:title:{title_id}')
+        await delete_pattern_cache('cache:titles:*')
         log.info(f"Title id={id} updated successfully")
         return {"id": title_id}
 
@@ -83,4 +90,5 @@ class TitleService:
     async def delete_titles(title_ids: list[str]):
         log.info(f"Deleting titles: {title_ids}")
         await TitleRepository.delete_one_or_many(model_ids=title_ids)
+        await delete_pattern_cache('cache:titles:*')
         log.info(f"Titles deleted successfully: {title_ids}")

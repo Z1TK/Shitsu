@@ -16,13 +16,13 @@ class TitleRepository(BaseRepository[Title]):
     @connection(commit=False)
     async def get_all(
         cls,
+        page: int,
+        limit: int,
         type: str,
         status: str,
         release_format: str,
         genres: list[int],
         tags: list[int],
-        page: int,
-        limit: int,
         session: AsyncSession
     ):
         stmt = select(cls.model)

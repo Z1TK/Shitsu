@@ -36,7 +36,7 @@ async def update_author(author_data: AuthorUpdateSchema, author_id: str):
 
 @author.delete("")
 async def delete_authors(author_ids: list[str]):
-    await AuthorService.delete_authors(model_ids=author_ids)
+    await AuthorService.delete_authors(author_ids)
     return JSONResponse(
         status_code=status.HTTP_200_OK,
         content={"detail": "The deletion was successful."},

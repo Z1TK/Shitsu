@@ -1,5 +1,5 @@
 import re
-import uuid
+from uuid import UUID
 from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
@@ -32,7 +32,7 @@ class RegisterSchema(BaseModel):
 class UserRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
-    id: uuid.UUID
+    id: UUID
     username: str = Field(min_length=3, max_length=25)
     email: EmailStr = Field(max_length=255)
     avatar: str
