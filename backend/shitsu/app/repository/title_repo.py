@@ -23,7 +23,7 @@ class TitleRepository(BaseRepository[Title]):
         release_format: str,
         genres: list[int],
         tags: list[int],
-        session: AsyncSession
+        session: AsyncSession,
     ):
         stmt = select(cls.model)
 

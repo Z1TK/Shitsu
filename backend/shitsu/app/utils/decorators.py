@@ -40,11 +40,12 @@ def connection(commit: bool = True):
 
     return decorator
 
+
 def cached(prefix: str, expire: int = 300):
     def decorator(method):
         @wraps(method)
         async def wrapper(*args, **kwargs):
-            key = f'{prefix}:{':'.join(str(a) for a in args)}'
+            key = f"{prefix}:{':'.join(str(a) for a in args)}"
             cache = await get_cache(key)
 
             if cache:
@@ -52,5 +53,7 @@ def cached(prefix: str, expire: int = 300):
             func = await method(*args, **kwargs)
             await set_cache(key, func, expire)
             return func
+
         return wrapper
+
     return decorator

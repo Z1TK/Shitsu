@@ -14,7 +14,12 @@ class BaseRepository[T: Base]:
 
     @classmethod
     @connection(commit=False)
-    async def get_all(cls, page: int, limit: int, session: AsyncSession,):
+    async def get_all(
+        cls,
+        page: int,
+        limit: int,
+        session: AsyncSession,
+    ):
         stmt = select(cls.model).offset((page - 1) * limit).limit(limit)
         obj = await session.execute(stmt)
         return obj.scalars().all()

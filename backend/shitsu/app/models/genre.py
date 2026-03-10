@@ -7,7 +7,7 @@ from backend.shitsu.app.models.base_mode import Base
 
 
 class Genre(Base):
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     name: Mapped[str] = mapped_column(String(255), unique=True)
     titles: Mapped[list["Title"]] = relationship(
         secondary=genre_title_table, back_populates="genres"

@@ -1,8 +1,8 @@
 from celery import Celery
 
-from backend.shitsu.core.redis import redis_url
+from backend.shitsu.core.redis import redis_backend, redis_worker
 
-celery_app = Celery("worker", backend=redis_url, broker=redis_url)
+celery_app = Celery("worker", backend=redis_backend, broker=redis_worker)
 
 celery_app.conf.update(
     task_serializer="json",

@@ -15,7 +15,7 @@ from backend.shitsu.app.utils.cache import delete_cache, delete_pattern_cache
 class PublisherService:
 
     @staticmethod
-    @cached('cache:publishers')
+    @cached("cache:publishers")
     async def get_all_publishers(page: int, limit: int):
         log.info(f"Fetching all publishers: page={page}, limit={limit}")
         publishers = await PublisherRepository.get_all(page, limit)
@@ -29,7 +29,7 @@ class PublisherService:
         ]
 
     @staticmethod
-    @cached('cache:publisher')
+    @cached("cache:publisher")
     async def get_publisher_by_id(publisher_id: str):
         log.info(f"Fetching publisher by id={publisher_id}")
         publisher = await PublisherRepository.get_publisher_title(publisher_id)
@@ -47,7 +47,7 @@ class PublisherService:
         if not publisher:
             log.error("Failed to create publisher")
             raise HTTPException(status_code=400, detail="Failed to create publisher")
-        await delete_pattern_cache('cache:publishers:*')
+        await delete_pattern_cache("cache:publishers:*")
         log.info("Publisher created successfully")
         return PublisherReadSchema.model_validate(publisher).model_dump()
 
@@ -63,8 +63,8 @@ class PublisherService:
         if not publisher:
             log.warning(f"Publisher id={publisher_id} not found for update")
             raise HTTPException(status_code=404, detail="Publisher not found")
-        await delete_cache(f'cache:publisher:{publisher_id}')
-        await delete_pattern_cache('cache:publishers:*')
+        await delete_cache(f"cache:publisher:{publisher_id}")
+        await delete_pattern_cache("cache:publishers:*")
         log.info(f"Publisher id={publisher_id} updated successfully")
         return PublisherReadSchema.model_validate(publisher).model_dump()
 
@@ -72,5 +72,5 @@ class PublisherService:
     async def delete_publishers(publisher_ids: list[str]):
         log.info(f"Deleting publishers: {publisher_ids}")
         await PublisherRepository.delete_one_or_many(model_ids=publisher_ids)
-        await delete_pattern_cache('cache:publishers:*')
+        await delete_pattern_cache("cache:publishers:*")
         log.info(f"Publishers deleted successfully: {publisher_ids}")

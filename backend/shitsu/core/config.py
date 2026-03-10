@@ -20,6 +20,11 @@ class Settings(BaseSettings):
     ACCESS_TIME: int
     REFRESH_TIME: int
 
+    MAIL: str
+    MAIL_PASSWORD: str
+    MAIL_SERVER: str
+    MAIL_PORT: int
+
     model_config = SettingsConfigDict(
         env_file=os.path.abspath(
             os.path.join(os.path.dirname(__file__), "../../../", ".env")

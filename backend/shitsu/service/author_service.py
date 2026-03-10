@@ -11,10 +11,11 @@ from backend.shitsu.app.logger import log
 from backend.shitsu.app.utils.decorators import cached
 from backend.shitsu.app.utils.cache import delete_cache, delete_pattern_cache
 
+
 class AuthorService:
 
     @staticmethod
-    @cached('cache:authors')
+    @cached("cache:authors")
     async def get_all_authors(page: int, limit: int):
         log.info(f"Fetching all authors: page={page}, limit={limit}")
         authors = await AuthorRepository.get_all(page, limit)
@@ -27,7 +28,7 @@ class AuthorService:
         ]
 
     @staticmethod
-    @cached('cache:author')
+    @cached("cache:author")
     async def get_author_by_id(author_id: str):
         log.info(f"Fetching author by id={author_id}")
         author = await AuthorRepository.get_by_id(author_id)
@@ -45,7 +46,7 @@ class AuthorService:
         if not author:
             log.error("Failed to create author")
             raise HTTPException(status_code=400, detail="Failed to create author")
-        await delete_pattern_cache('cache:authors:*')
+        await delete_pattern_cache("cache:authors:*")
         log.info(f"Author created successfully")
         return AuthorReadSchema.model_validate(author).model_dump()
 
@@ -59,16 +60,16 @@ class AuthorService:
         if not author:
             log.warning(f"Author id={author_id} not found for update")
             raise HTTPException(status_code=404, detail="Author not found")
-        await delete_cache(f'cache:author:{author_id}')
-        await delete_pattern_cache('cache:authors:*')
+        await delete_cache(f"cache:author:{author_id}")
+        await delete_pattern_cache("cache:authors:*")
         log.info(f"Author id={author_id} updated successfully")
         return AuthorReadSchema.model_validate(author).model_dump()
 
     @staticmethod
     async def delete_authors(author_ids: list[str]):
         log.info(f"Deleting authors: {author_ids}")
-        keys = [f'cache:author:{id}' for id in author_ids]
+        keys = [f"cache:author:{id}" for id in author_ids]
         await AuthorRepository.delete_one_or_many(model_ids=author_ids)
         await delete_cache(keys)
-        await delete_pattern_cache('cache:authors:*')
+        await delete_pattern_cache("cache:authors:*")
         log.info(f"Authors deleted successfully: {author_ids}")

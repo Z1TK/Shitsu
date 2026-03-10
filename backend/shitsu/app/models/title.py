@@ -2,7 +2,6 @@ import uuid
 
 from slugify import slugify
 from sqlalchemy import ForeignKey, Integer, String, Text, event, inspect
-from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 
 from backend.shitsu.app.enum.title_enum import *
@@ -17,7 +16,7 @@ from backend.shitsu.app.models.tag import Tag
 
 
 class Title(Base):
-    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True)
     title: Mapped[str] = mapped_column(String(255))
     slug: Mapped[str] = mapped_column(String(255), unique=True)
     description: Mapped[str] = mapped_column(Text)
@@ -38,6 +37,12 @@ class Title(Base):
     )
     tags: Mapped[list["Tag"]] = relationship(
         secondary=tag_title_table, back_populates="titles"
+    )
+    comments: Mapped[list["Comment"]] = relationship(
+        "Comment", back_populates="title", cascade="all, delete-orphan"
+    )
+    chapters: Mapped[list["Chapter"]] = relationship(
+        "Chapter", back_populates="title", cascade="all, delete-orphan"
     )
 
     @validates("release_year")

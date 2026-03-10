@@ -1,10 +1,11 @@
 import uuid
 
-from sqlalchemy import String, event
+from sqlalchemy import String, event, Boolean
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 
 from backend.shitsu.app.models.base_mode import Base
+from backend.shitsu.app.enum.user_enum import Role
 
 
 class User(Base):
@@ -15,3 +16,8 @@ class User(Base):
     password: Mapped[str] = mapped_column()
     email: Mapped[str] = mapped_column(String(255), unique=True)
     avatar: Mapped[str] = mapped_column(String(2048))
+    is_verified: Mapped[bool] = mapped_column(Boolean, server_default="false")
+    role: Mapped[Role] = mapped_column(server_default="reader")
+    comments: Mapped[list["Comment"]] = relationship(
+        "Comment", back_populates="title", cascade="all, delete-orphan"
+    )

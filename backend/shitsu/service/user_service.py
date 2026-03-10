@@ -47,7 +47,7 @@ class UserService:
         )
 
     @staticmethod
-    @cached('cache:user')
+    @cached("cache:user")
     async def get_user(user_id: str):
         log.info(f"Fetching user: id={user_id}")
         user = await UserRepository.get_by_id(user_id)
