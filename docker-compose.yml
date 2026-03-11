@@ -9,6 +9,11 @@ services:
       - .env
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   backend:
     build: 
@@ -21,13 +26,32 @@ services:
       - "8000:8000"
     container_name: backend
     depends_on:
-      - database
-      - redis
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
     
   redis:
     image: redis:7
     restart: always
     container_name: redis
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # celery:
+  #   build: 
+  #     context: .
+  #   container_name: celery_worker
+  #   volumes:
+  #     - .:/app
+  #   restart: always
+  #   command: uv run celery -A backend.shitsu.core.celery worker --loglevel=info
+  #   depends_on:
+  #     - database
+  #     - redis
 
 volumes:
   postgres_data:

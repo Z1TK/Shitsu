@@ -1,11 +1,13 @@
 from fastapi import HTTPException, Response, status
+from datetime import timedelta
 
 from backend.shitsu.app.repository.user_repo import UserRepository
 from backend.shitsu.app.schemas.user import UserRead, LoginUser, RegisterSchema, Token
 from backend.shitsu.app.utils.password import hash_password, verify_password
-from backend.shitsu.app.utils.token import set_cookies
+from backend.shitsu.app.utils.token import set_cookies, validate_token
 from backend.shitsu.app.logger import log
 from backend.shitsu.app.utils.decorators import cached
+from backend.shitsu.app.utils.email import send_email
 
 
 class UserService:
@@ -17,14 +19,15 @@ class UserService:
         exist_user = await UserRepository.get_by_email(values["email"])
         if exist_user:
             log.warning(f"User already exists: email={dto.email}")
-            return HTTPException(
+            raise HTTPException(
                 status_code=status.HTTP_409_CONFLICT, detail="User exist"
             )
         values["password"] = hash_password(dto.password)
         user = await UserRepository.add(**values)
         access_token = set_cookies(res, user.id, "access_token", 420)
         refresh_token = set_cookies(res, user.id, "refresh_token", 1296000)
-        log.info(f"User registered successfully: id={user.id}, email={dto.email}")
+        send_email(user.email, user.id)
+        log.info(f"User registered successfully: id={user.id}, email={user.email}")
         return Token(
             access_token=access_token, refresh_token=refresh_token, token_type="bearer"
         )
@@ -66,3 +69,14 @@ class UserService:
         log.info("User logged out")
         res.delete_cookie(key="access_token", httponly=True)
         res.delete_cookie(key="refresh_token", httponly=True)
+
+    @staticmethod
+    async def verigy_user(token: str):
+        user_id = validate_token(token)
+        user = await UserRepository.update_by_id(model_id=user_id, is_verify=True)
+        if not user:
+            log.warning(f"User not found: id={user_id}")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+            )
+        return {"message": "Your email has been successfully verified."}

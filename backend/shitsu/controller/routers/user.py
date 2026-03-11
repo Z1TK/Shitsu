@@ -4,7 +4,7 @@ from backend.shitsu.app.schemas.user import RegisterSchema, LoginUser
 from backend.shitsu.service.user_service import UserService
 from backend.shitsu.app.utils.token import current_access_token, current_refresh_token
 
-user = APIRouter(prefix="/accounts")
+user = APIRouter(prefix="/account")
 
 
 @user.post("/sign_up")
@@ -36,3 +36,7 @@ async def get_profile(user_id: str = Depends(current_access_token)):
 async def logout(res: Response):
     await UserService.logout_user(res)
     return {"message": "logged out"}
+
+@user.get('/veryfy')
+async def verify(token: str):
+    return await UserService.verify_user(token)

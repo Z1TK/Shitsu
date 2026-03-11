@@ -53,7 +53,7 @@ def validate_token(token: str):
 def set_cookies(res: Response, user_id: str, token_name: str, max_age: int):
     if token_name == "access_token":
         token_expire = timedelta(minutes=settings.ACCESS_TIME)
-    else:
+    if token_name == 'refresh_token':
         token_expire = timedelta(days=settings.REFRESH_TIME)
 
     token = create_token(data={"sub": str(user_id)}, expires_delta=token_expire)

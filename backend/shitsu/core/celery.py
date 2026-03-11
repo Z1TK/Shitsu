@@ -2,9 +2,9 @@ from celery import Celery
 
 from backend.shitsu.core.redis import redis_backend, redis_worker
 
-celery_app = Celery("worker", backend=redis_backend, broker=redis_worker)
+app = Celery("worker", backend=redis_backend, broker=redis_worker)
 
-celery_app.conf.update(
+app.conf.update(
     task_serializer="json",
     result_serializer="json",
     accept_contetn=["json"],
