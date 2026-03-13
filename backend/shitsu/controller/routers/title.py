@@ -3,7 +3,8 @@ from typing import Annotated
 from fastapi import APIRouter, Query, status
 from fastapi.responses import JSONResponse
 
-from backend.shitsu.app.schemas.title import TitleCreateSchema, TitleUpdateSchema
+from backend.shitsu.app.schemas.title import (TitleCreateSchema,
+                                              TitleUpdateSchema)
 from backend.shitsu.service.title_service import TitleService
 
 title = APIRouter(prefix="/titles")

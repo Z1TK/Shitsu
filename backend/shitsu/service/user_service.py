@@ -1,13 +1,13 @@
 from fastapi import HTTPException, Response, status
-from datetime import timedelta
 
-from backend.shitsu.app.repository.user_repo import UserRepository
-from backend.shitsu.app.schemas.user import UserRead, LoginUser, RegisterSchema, Token
-from backend.shitsu.app.utils.password import hash_password, verify_password
-from backend.shitsu.app.utils.token import set_cookies, validate_token
 from backend.shitsu.app.logger import log
+from backend.shitsu.app.repository.user_repo import UserRepository
+from backend.shitsu.app.schemas.user import (LoginUser, RegisterSchema, Token,
+                                             UserRead)
 from backend.shitsu.app.utils.decorators import cached
 from backend.shitsu.app.utils.email import send_email
+from backend.shitsu.app.utils.password import hash_password, verify_password
+from backend.shitsu.app.utils.token import set_cookies, validate_token
 
 
 class UserService:
@@ -71,7 +71,7 @@ class UserService:
         res.delete_cookie(key="refresh_token", httponly=True)
 
     @staticmethod
-    async def verigy_user(token: str):
+    async def verify_user(token: str):
         user_id = validate_token(token)
         user = await UserRepository.update_by_id(model_id=user_id, is_verify=True)
         if not user:

@@ -1,5 +1,5 @@
-from uuid import UUID
 from typing import Annotated
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -59,6 +59,22 @@ class TagTitleSchema(BaseModel):
     name: Annotated[str, Field(max_length=255)]
 
 
+class CommentTitleSchema(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    content: str
+    user_id: UUID
+    likes_count: int
+
+
+class ChapterTitleSchema(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    title: str
+    volume: str
+    number: float
+
+
 class TitleReadIDSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True, use_enum_values=True)
 
@@ -75,6 +91,8 @@ class TitleReadIDSchema(BaseModel):
     publisher: PublisherTitleSchema
     genres: list[GenreTitleSchema]
     tags: list[TagTitleSchema]
+    comments: list[CommentTitleSchema]
+    chapters: list[ChapterTitleSchema]
 
 
 class TitleUpdateSchema(BaseModel):

@@ -1,11 +1,10 @@
 import uuid
 
-from sqlalchemy import String, event, Boolean, Text, ForeignKey, Integer
+from sqlalchemy import Boolean, ForeignKey, Integer, String, Text, event
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
-from backend.shitsu.app.models.title import Title
-from backend.shitsu.app.models.user import User
 from backend.shitsu.app.models.base_mode import Base
+from backend.shitsu.app.models.user import User
 
 
 class Comment(Base):

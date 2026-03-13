@@ -1,7 +1,7 @@
 import enum
 
 
-class Role(str, enum.Enum):
+class RoleEnum(str, enum.Enum):
     READER = "reader"
     TRANSLATOR = "translator"
     MODERATOR = "moderator"

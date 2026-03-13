@@ -1,8 +1,9 @@
-from fastapi import APIRouter, Response, Depends
+from fastapi import APIRouter, Depends, Response
 
-from backend.shitsu.app.schemas.user import RegisterSchema, LoginUser
+from backend.shitsu.app.schemas.user import LoginUser, RegisterSchema
+from backend.shitsu.app.utils.token import (current_access_token,
+                                            current_refresh_token)
 from backend.shitsu.service.user_service import UserService
-from backend.shitsu.app.utils.token import current_access_token, current_refresh_token
 
 user = APIRouter(prefix="/account")
 
@@ -37,6 +38,7 @@ async def logout(res: Response):
     await UserService.logout_user(res)
     return {"message": "logged out"}
 
-@user.get('/veryfy')
+
+@user.get("/veryfy")
 async def verify(token: str):
     return await UserService.verify_user(token)

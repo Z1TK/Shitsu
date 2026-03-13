@@ -1,6 +1,7 @@
-import jwt
 from datetime import datetime, timedelta, timezone
-from fastapi import Request, HTTPException, status, Response
+
+import jwt
+from fastapi import HTTPException, Request, Response, status
 
 from backend.shitsu.core.config import settings
 
@@ -53,7 +54,7 @@ def validate_token(token: str):
 def set_cookies(res: Response, user_id: str, token_name: str, max_age: int):
     if token_name == "access_token":
         token_expire = timedelta(minutes=settings.ACCESS_TIME)
-    if token_name == 'refresh_token':
+    if token_name == "refresh_token":
         token_expire = timedelta(days=settings.REFRESH_TIME)
 
     token = create_token(data={"sub": str(user_id)}, expires_delta=token_expire)

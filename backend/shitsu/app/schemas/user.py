@@ -1,6 +1,6 @@
 import re
-from uuid import UUID
 from typing import Annotated
+from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
 
@@ -29,6 +29,15 @@ class RegisterSchema(BaseModel):
     avatar: str
 
 
+class CommentUserSchema(BaseModel):
+    model_config = ConfigDict(from_attributes=True)
+
+    content: str
+    user_id: UUID
+    title_id: int
+    likes_count: int
+
+
 class UserRead(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
@@ -36,6 +45,8 @@ class UserRead(BaseModel):
     username: str = Field(min_length=3, max_length=25)
     email: EmailStr = Field(max_length=255)
     avatar: str
+    role: str
+    comments: list[CommentUserSchema]
 
 
 class Token(BaseModel):

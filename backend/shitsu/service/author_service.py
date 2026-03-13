@@ -1,15 +1,13 @@
 from fastapi import HTTPException
 
-from backend.shitsu.app.repository.author_repo import AuthorRepository
-from backend.shitsu.app.schemas.author import (
-    AuthorCreateSchema,
-    AuthorIdSchema,
-    AuthorReadSchema,
-    AuthorUpdateSchema,
-)
 from backend.shitsu.app.logger import log
-from backend.shitsu.app.utils.decorators import cached
+from backend.shitsu.app.repository.author_repo import AuthorRepository
+from backend.shitsu.app.schemas.author import (AuthorCreateSchema,
+                                               AuthorIdSchema,
+                                               AuthorReadSchema,
+                                               AuthorUpdateSchema)
 from backend.shitsu.app.utils.cache import delete_cache, delete_pattern_cache
+from backend.shitsu.app.utils.decorators import cached
 
 
 class AuthorService:

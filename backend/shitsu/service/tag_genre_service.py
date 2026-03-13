@@ -1,9 +1,10 @@
 from fastapi import HTTPException
 
-from backend.shitsu.app.repository.tag_genre_repo import GenreRepository, TagRepository
+from backend.shitsu.app.logger import log
+from backend.shitsu.app.repository.tag_genre_repo import (GenreRepository,
+                                                          TagRepository)
 from backend.shitsu.app.schemas.genre import GenreReadSchema
 from backend.shitsu.app.schemas.tag import TagReadSchema
-from backend.shitsu.app.logger import log
 
 
 class GenreService:

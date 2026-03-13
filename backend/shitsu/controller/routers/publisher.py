@@ -3,10 +3,8 @@ from typing import Annotated
 from fastapi import APIRouter, Query, status
 from fastapi.responses import JSONResponse
 
-from backend.shitsu.app.schemas.publisher import (
-    PublisherCreateSchema,
-    PublisherUpdateSchema,
-)
+from backend.shitsu.app.schemas.publisher import (PublisherCreateSchema,
+                                                  PublisherUpdateSchema)
 from backend.shitsu.service.publisher_service import PublisherService
 
 publisher = APIRouter(prefix="/publishers")

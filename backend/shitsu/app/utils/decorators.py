@@ -1,6 +1,7 @@
 from functools import wraps
 
-from sqlalchemy.exc import DataError, IntegrityError, NoResultFound, OperationalError
+from sqlalchemy.exc import (DataError, IntegrityError, NoResultFound,
+                            OperationalError)
 
 from backend.shitsu.app.db.database import async_session_marker
 from backend.shitsu.app.logger import log

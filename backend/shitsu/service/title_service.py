@@ -1,16 +1,15 @@
 from fastapi import HTTPException
 
-from backend.shitsu.app.repository.title_repo import TitleRepository
-from backend.shitsu.app.repository.tag_genre_repo import TagRepository, GenreRepository
-from backend.shitsu.app.schemas.title import (
-    TitleCreateSchema,
-    TitleReadAllSchema,
-    TitleReadIDSchema,
-    TitleUpdateSchema,
-)
 from backend.shitsu.app.logger import log
-from backend.shitsu.app.utils.decorators import cached
+from backend.shitsu.app.repository.tag_genre_repo import (GenreRepository,
+                                                          TagRepository)
+from backend.shitsu.app.repository.title_repo import TitleRepository
+from backend.shitsu.app.schemas.title import (TitleCreateSchema,
+                                              TitleReadAllSchema,
+                                              TitleReadIDSchema,
+                                              TitleUpdateSchema)
 from backend.shitsu.app.utils.cache import delete_cache, delete_pattern_cache
+from backend.shitsu.app.utils.decorators import cached
 
 
 class TitleService:

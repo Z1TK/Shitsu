@@ -1,8 +1,9 @@
-from fastapi import FastAPI, Request, HTTPException
 import time
 
-from backend.shitsu.controller.router import api_router
+from fastapi import FastAPI, HTTPException, Request
+
 from backend.shitsu.app.logger import log
+from backend.shitsu.controller.router import api_router
 
 app = FastAPI()
 

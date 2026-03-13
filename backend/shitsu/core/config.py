@@ -25,6 +25,7 @@ class Settings(BaseSettings):
     MAIL_PASSWORD: str
     MAIL_SERVER: str
     MAIL_PORT: int
+    RESEND_KEY: str
 
     model_config = SettingsConfigDict(
         env_file=os.path.abspath(

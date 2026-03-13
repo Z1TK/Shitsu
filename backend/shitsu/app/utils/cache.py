@@ -1,4 +1,5 @@
 import json
+
 from backend.shitsu.core.redis import r_cache
 
 

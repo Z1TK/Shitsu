@@ -41,17 +41,33 @@ services:
       timeout: 5s
       retries: 5
 
-  # celery:
-  #   build: 
+  celery:
+    build: 
+      context: .
+    container_name: celery_worker
+    volumes:
+      - .:/app
+    restart: always
+    command: uv run celery -A backend.shitsu.core.celery worker --loglevel=info
+    depends_on:
+      - database
+      - redis
+
+  # flower:
+  #   build:
   #     context: .
-  #   container_name: celery_worker
-  #   volumes:
-  #     - .:/app
-  #   restart: always
-  #   command: uv run celery -A backend.shitsu.core.celery worker --loglevel=info
+  #   container_name: flower
+  #   ports:
+  #     - "5555:5555"
+  #   command: uv run celery -A backend.shitsu.core.celery flower --port=5555
+  #   environment:
+  #   - PYTHONPATH=/app  
+  #   env_file:
+  #     - .env
   #   depends_on:
-  #     - database
   #     - redis
+  #     - celery
+  #   restart: always
 
 volumes:
   postgres_data:

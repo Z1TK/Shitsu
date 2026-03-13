@@ -56,6 +56,8 @@ class TitleRepository(BaseRepository[Title]):
                 selectinload(cls.model.publisher),
                 selectinload(cls.model.genres),
                 selectinload(cls.model.tags),
+                selectinload(cls.model.chapters),
+                selectinload(cls.model.comments),
             )
             .where(cls.model.id == model_id)
         )
