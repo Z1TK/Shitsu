@@ -25,6 +25,7 @@ services:
     ports:
       - "8000:8000"
     container_name: backend
+    entrypoint: '/entrypoint.sh'
     depends_on:
       database:
         condition: service_healthy
@@ -50,24 +51,28 @@ services:
     restart: always
     command: uv run celery -A backend.shitsu.core.celery worker --loglevel=info
     depends_on:
-      - database
-      - redis
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
 
-  # flower:
-  #   build:
-  #     context: .
-  #   container_name: flower
-  #   ports:
-  #     - "5555:5555"
-  #   command: uv run celery -A backend.shitsu.core.celery flower --port=5555
-  #   environment:
-  #   - PYTHONPATH=/app  
-  #   env_file:
-  #     - .env
-  #   depends_on:
-  #     - redis
-  #     - celery
-  #   restart: always
+  flower:
+    build:
+      context: .
+    container_name: flower
+    ports:
+      - "5555:5555"
+    command: uv run celery -A backend.shitsu.core.celery flower --port=5555
+    environment:
+    - PYTHONPATH=/app  
+    env_file:
+      - .env
+    volumes:
+      - .:/app
+    depends_on:
+      - redis
+      - celery
+    restart: always
 
 volumes:
   postgres_data:

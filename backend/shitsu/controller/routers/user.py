@@ -39,6 +39,6 @@ async def logout(res: Response):
     return {"message": "logged out"}
 
 
-@user.get("/veryfy")
+@user.get("/verify")
 async def verify(token: str):
     return await UserService.verify_user(token)

@@ -17,9 +17,8 @@ letter_template = env.get_template("letter.html")
 resend.api_key = settings.RESEND_KEY
 
 
-@app.task
 def send_verification_email(email: str, token: str):
-    link = f"http://localhost:8000/account/verify?token={token}"
+    link = f"http://localhost:8000/api/account/verify?token={token}"
     message = letter_template.render(verification_link=link)
     resend.Emails.send(
         {
@@ -31,7 +30,8 @@ def send_verification_email(email: str, token: str):
     )
 
 
+@app.task
 def send_email(email: str, user_id: str):
     expire_time = timedelta(days=settings.VERIFY_TIME)
     token = create_token(data={"sub": str(user_id)}, expires_delta=expire_time)
-    send_verification_email.delay(email, token)
+    send_verification_email(email, token)

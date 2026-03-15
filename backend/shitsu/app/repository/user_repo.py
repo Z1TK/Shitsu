@@ -12,11 +12,11 @@ class UserRepository(BaseRepository[User]):
 
     @classmethod
     @connection(commit=False)
-    async def get_by_email(cls, model_email: str, session: AsyncSession):
+    async def get_by_id(cls, model_id: str, session: AsyncSession):
         stmt = (
             select(cls.model)
             .options(selectinload(cls.model.comments))
-            .where(cls.model.email == model_email)
+            .where(cls.model.id == model_id)
         )
         obj = await session.execute(stmt)
         return obj.scalar_one_or_none()

@@ -26,7 +26,7 @@ class UserService:
         user = await UserRepository.add(**values)
         access_token = set_cookies(res, user.id, "access_token", 420)
         refresh_token = set_cookies(res, user.id, "refresh_token", 1296000)
-        send_email(user.email, user.id)
+        send_email.delay(user.email, str(user.id))
         log.info(f"User registered successfully: id={user.id}, email={user.email}")
         return Token(
             access_token=access_token, refresh_token=refresh_token, token_type="bearer"
@@ -73,7 +73,7 @@ class UserService:
     @staticmethod
     async def verify_user(token: str):
         user_id = validate_token(token)
-        user = await UserRepository.update_by_id(model_id=user_id, is_verify=True)
+        user = await UserRepository.update_by_id(model_id=user_id, is_verified=True)
         if not user:
             log.warning(f"User not found: id={user_id}")
             raise HTTPException(
