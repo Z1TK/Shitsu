@@ -25,7 +25,7 @@ services:
     ports:
       - "8000:8000"
     container_name: backend
-    entrypoint: '/entrypoint.sh'
+    command: sh -c "uv run alembic upgrade head && uv run uvicorn backend.main:app --reload --host 0.0.0.0 --port 8000"
     depends_on:
       database:
         condition: service_healthy
@@ -49,10 +49,10 @@ services:
     volumes:
       - .:/app
     restart: always
-    command: uv run celery -A backend.shitsu.core.celery worker --loglevel=info
+    env_file:
+      - .env
+    command: uv run celery -A backend.shitsu.core.celery worker --loglevel=info --concurrency=4
     depends_on:
-      database:
-        condition: service_healthy
       redis:
         condition: service_healthy
 
@@ -69,9 +69,6 @@ services:
       - .env
     volumes:
       - .:/app
-    depends_on:
-      - redis
-      - celery
     restart: always
 
 volumes:

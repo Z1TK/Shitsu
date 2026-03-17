@@ -41,14 +41,14 @@ def validate_token(token: str):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED, detail="Token expired"
         )
-    user_id = payload.get("sub")
+    required_field = payload.get("sub")
 
-    if not user_id:
+    if not required_field:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="ID not found"
+            status_code=status.HTTP_401_UNAUTHORIZED, detail="Required field not found in token"
         )
 
-    return user_id
+    return required_field
 
 
 def set_cookies(res: Response, user_id: str, token_name: str, max_age: int):

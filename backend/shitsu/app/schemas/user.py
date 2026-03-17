@@ -53,3 +53,9 @@ class Token(BaseModel):
     access_token: str
     refresh_token: str
     token_type: str
+
+class EmailReset(BaseModel):
+    email: str
+
+class PasswordReset(BaseModel):
+    password: str

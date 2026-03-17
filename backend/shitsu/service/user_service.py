@@ -5,7 +5,7 @@ from backend.shitsu.app.repository.user_repo import UserRepository
 from backend.shitsu.app.schemas.user import (LoginUser, RegisterSchema, Token,
                                              UserRead)
 from backend.shitsu.app.utils.decorators import cached
-from backend.shitsu.app.utils.email import send_email
+from backend.shitsu.app.utils.email import send_email_reset, send_email_verify
 from backend.shitsu.app.utils.password import hash_password, verify_password
 from backend.shitsu.app.utils.token import set_cookies, validate_token
 
@@ -26,7 +26,7 @@ class UserService:
         user = await UserRepository.add(**values)
         access_token = set_cookies(res, user.id, "access_token", 420)
         refresh_token = set_cookies(res, user.id, "refresh_token", 1296000)
-        send_email.delay(user.email, str(user.id))
+        send_email_verify.delay(user.email, str(user.id))
         log.info(f"User registered successfully: id={user.id}, email={user.email}")
         return Token(
             access_token=access_token, refresh_token=refresh_token, token_type="bearer"
@@ -72,11 +72,31 @@ class UserService:
 
     @staticmethod
     async def verify_user(token: str):
-        user_id = validate_token(token)
-        user = await UserRepository.update_by_id(model_id=user_id, is_verified=True)
+        email = validate_token(token)
+        user = await UserRepository.update_by_email(model_email=email, is_verified=True)
         if not user:
-            log.warning(f"User not found: id={user_id}")
+            log.warning(f"User not found: email={email}")
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
             )
         return {"message": "Your email has been successfully verified."}
+    
+    @staticmethod
+    async def email_reset_password(email: str):
+        send_email_reset.delay(email)
+
+    @staticmethod
+    async def change_password(res: Response, password: str, token: str):
+        user_email = validate_token(token)
+        password = hash_password(password)
+        user = await UserRepository.update_by_email(model_email=user_email, password=password)
+        if not user:
+            log.warning(f"User not found: email={user_email}")
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
+            )
+        log.info("User cookies deleted after password change")
+        res.delete_cookie(key="access_token", httponly=True)
+        res.delete_cookie(key="refresh_token", httponly=True)
+        return {"message": "Password successfully changed"}
+        

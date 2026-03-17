@@ -20,6 +20,7 @@ class Settings(BaseSettings):
     ACCESS_TIME: int
     REFRESH_TIME: int
     VERIFY_TIME: int
+    RESET_TIME: int
 
     MAIL: str
     MAIL_PASSWORD: str
