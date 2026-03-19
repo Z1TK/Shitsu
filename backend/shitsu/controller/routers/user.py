@@ -1,8 +1,12 @@
 from fastapi import APIRouter, Depends, Response, Query, Body
 
-from backend.shitsu.app.schemas.user import LoginUser, RegisterSchema, EmailReset, PasswordReset
-from backend.shitsu.app.utils.token import (current_access_token,
-                                            current_refresh_token)
+from backend.shitsu.app.schemas.user import (
+    LoginUser,
+    RegisterSchema,
+    EmailReset,
+    PasswordReset,
+)
+from backend.shitsu.app.utils.token import current_access_token, current_refresh_token
 from backend.shitsu.service.user_service import UserService
 
 user = APIRouter(prefix="/account")
@@ -43,9 +47,11 @@ async def logout(res: Response):
 async def verify(token: str):
     return await UserService.verify_user(token)
 
+
 @user.post("/email_reset_password")
 async def send_email_reset(data: EmailReset):
     await UserService.email_reset_password(data.email)
+
 
 @user.post("/change_password")
 async def change_password(res: Response, token: str, data: PasswordReset):

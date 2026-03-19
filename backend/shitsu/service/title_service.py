@@ -1,13 +1,14 @@
 from fastapi import HTTPException
 
 from backend.shitsu.app.logger import log
-from backend.shitsu.app.repository.tag_genre_repo import (GenreRepository,
-                                                          TagRepository)
+from backend.shitsu.app.repository.tag_genre_repo import GenreRepository, TagRepository
 from backend.shitsu.app.repository.title_repo import TitleRepository
-from backend.shitsu.app.schemas.title import (TitleCreateSchema,
-                                              TitleReadAllSchema,
-                                              TitleReadIDSchema,
-                                              TitleUpdateSchema)
+from backend.shitsu.app.schemas.title import (
+    TitleCreateSchema,
+    TitleReadAllSchema,
+    TitleReadIDSchema,
+    TitleUpdateSchema,
+)
 from backend.shitsu.app.utils.cache import delete_cache, delete_pattern_cache
 from backend.shitsu.app.utils.decorators import cached
 
@@ -19,14 +20,21 @@ class TitleService:
     async def get_all_titles(
         page: int,
         limit: int,
-        type: str,
-        status: str,
-        release_format: str,
+        type: list[str],
+        status: list[str],
+        release_format: list[str],
         genres: list[int],
         tags: list[int],
+        year_min: int,
+        year_max: int,
+        genres_soft_search: int,
+        tags_soft_search: int,
     ):
         log.info(
-            f"Fetching all titles: page={page}, limit={limit}, type={type}, status={status}, release_format={release_format}, genres={genres}, tags={tags}"
+            f"Fetching all titles: page={page}, limit={limit}, type={type}, "
+            f"status={status}, release_format={release_format}, "
+            f"genres={genres}, tags={tags}, year_min={year_min}, year_max={year_max}, "
+            f"genres_soft={genres_soft_search}, tags_soft={tags_soft_search}"
         )
         titles = await TitleRepository.get_all(
             page,
@@ -36,6 +44,10 @@ class TitleService:
             release_format,
             genres,
             tags,
+            year_min,
+            year_max,
+            genres_soft_search,
+            tags_soft_search,
         )
         if not titles:
             log.warning("No titles found")
@@ -47,9 +59,9 @@ class TitleService:
 
     @staticmethod
     @cached("cache:title")
-    async def get_title_by_id(title_id: str):
+    async def get_title_by_id(title_id: str, section: str):
         log.info(f"Fetching title by id={title_id}")
-        title = await TitleRepository.get_by_id(model_id=title_id)
+        title = await TitleRepository.get_by_id(title_id, section)
         if not title:
             log.warning(f"Title id={title_id} not found")
             raise HTTPException(status_code=404, detail="Title not found")

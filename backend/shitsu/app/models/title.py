@@ -5,8 +5,10 @@ from sqlalchemy import ForeignKey, Integer, String, Text, event, inspect
 from sqlalchemy.orm import Mapped, mapped_column, relationship, validates
 
 from backend.shitsu.app.enum.title_enum import *
-from backend.shitsu.app.models.association_tables import (genre_title_table,
-                                                          tag_title_table)
+from backend.shitsu.app.models.association_tables import (
+    genre_title_table,
+    tag_title_table,
+)
 from backend.shitsu.app.models.base_mode import Base
 from backend.shitsu.app.models.chapter import Chapter
 from backend.shitsu.app.models.comment import Comment

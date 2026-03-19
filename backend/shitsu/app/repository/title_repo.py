@@ -1,4 +1,4 @@
-from sqlalchemy import select, update
+from sqlalchemy import select, update, and_
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
@@ -18,29 +18,48 @@ class TitleRepository(BaseRepository[Title]):
         cls,
         page: int,
         limit: int,
-        type: str,
-        status: str,
-        release_format: str,
+        type: list[str],
+        status: list[str],
+        release_format: list[str],
         genres: list[int],
         tags: list[int],
+        year_min: int,
+        year_max: int,
+        # sort_by: str,
+        genres_soft_search: bool,
+        tags_soft_search: bool,
         session: AsyncSession,
     ):
         stmt = select(cls.model)
 
         if type:
-            stmt = stmt.where(cls.model.type == type)
+            stmt = stmt.where(cls.model.type.in_(type))
 
         if status:
-            stmt = stmt.where(cls.model.status == status)
+            stmt = stmt.where(cls.model.status.in_(status))
 
         if release_format:
-            stmt = stmt.where(cls.model.release_format == release_format)
+            stmt = stmt.where(cls.model.release_format.in_(release_format))
 
-        if genres:
+        if genres_soft_search and genres:
             stmt = stmt.where(cls.model.genres.any(Genre.id.in_(genres)))
+        elif genres:
+            stmt = stmt.where(
+                and_(*[cls.model.genres.any(Genre.id == genre) for genre in genres])
+            )
 
-        if tags:
+        if tags_soft_search and tags:
             stmt = stmt.where(cls.model.tags.any(Tag.id.in_(tags)))
+        elif tags:
+            stmt = stmt.where(
+                and_(*[cls.model.tags.any(Tag.id == tag) for tag in tags])
+            )
+
+        if year_min:
+            stmt = stmt.where(cls.model.release_year >= year_min)
+
+        if year_max:
+            stmt = stmt.where(cls.model.release_year <= year_max)
 
         stmt = stmt.offset((page - 1) * limit).limit(limit)
         obj = await session.execute(stmt)
@@ -48,19 +67,19 @@ class TitleRepository(BaseRepository[Title]):
 
     @classmethod
     @connection(commit=False)
-    async def get_by_id(cls, model_id: int, session: AsyncSession):
-        stmt = (
-            select(cls.model)
-            .options(
+    async def get_by_id(cls, model_id: int, section: str, session: AsyncSession):
+        stmt = select(cls.model).where(cls.model.id == model_id)
+        if section == "info":
+            stmt = stmt.options(
                 selectinload(cls.model.author),
                 selectinload(cls.model.publisher),
                 selectinload(cls.model.genres),
                 selectinload(cls.model.tags),
-                selectinload(cls.model.chapters),
-                selectinload(cls.model.comments),
             )
-            .where(cls.model.id == model_id)
-        )
+        if section == "chapters":
+            stmt = stmt.options(selectinload(cls.model.chapters))
+        if section == "comments":
+            stmt = stmt.opntions(selectinload(cls.model.comments))
         obj = await session.execute(stmt)
         return obj.scalar_one_or_none()
 

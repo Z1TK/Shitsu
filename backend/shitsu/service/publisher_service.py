@@ -2,10 +2,12 @@ from fastapi import HTTPException
 
 from backend.shitsu.app.logger import log
 from backend.shitsu.app.repository.publisher_repo import PublisherRepository
-from backend.shitsu.app.schemas.publisher import (PublisherCreateSchema,
-                                                  PublisherIdschema,
-                                                  PublisherReadSchema,
-                                                  PublisherUpdateSchema)
+from backend.shitsu.app.schemas.publisher import (
+    PublisherCreateSchema,
+    PublisherIdschema,
+    PublisherReadSchema,
+    PublisherUpdateSchema,
+)
 from backend.shitsu.app.utils.cache import delete_cache, delete_pattern_cache
 from backend.shitsu.app.utils.decorators import cached
 

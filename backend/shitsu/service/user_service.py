@@ -2,8 +2,7 @@ from fastapi import HTTPException, Response, status
 
 from backend.shitsu.app.logger import log
 from backend.shitsu.app.repository.user_repo import UserRepository
-from backend.shitsu.app.schemas.user import (LoginUser, RegisterSchema, Token,
-                                             UserRead)
+from backend.shitsu.app.schemas.user import LoginUser, RegisterSchema, Token, UserRead
 from backend.shitsu.app.utils.decorators import cached
 from backend.shitsu.app.utils.email import send_email_reset, send_email_verify
 from backend.shitsu.app.utils.password import hash_password, verify_password
@@ -80,7 +79,7 @@ class UserService:
                 status_code=status.HTTP_404_NOT_FOUND, detail="User not found"
             )
         return {"message": "Your email has been successfully verified."}
-    
+
     @staticmethod
     async def email_reset_password(email: str):
         send_email_reset.delay(email)
@@ -89,7 +88,9 @@ class UserService:
     async def change_password(res: Response, password: str, token: str):
         user_email = validate_token(token)
         password = hash_password(password)
-        user = await UserRepository.update_by_email(model_email=user_email, password=password)
+        user = await UserRepository.update_by_email(
+            model_email=user_email, password=password
+        )
         if not user:
             log.warning(f"User not found: email={user_email}")
             raise HTTPException(
@@ -99,4 +100,3 @@ class UserService:
         res.delete_cookie(key="access_token", httponly=True)
         res.delete_cookie(key="refresh_token", httponly=True)
         return {"message": "Password successfully changed"}
-        

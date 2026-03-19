@@ -3,8 +3,7 @@ from typing import Annotated
 from fastapi import APIRouter, Query, status
 from fastapi.responses import JSONResponse
 
-from backend.shitsu.app.schemas.author import (AuthorCreateSchema,
-                                               AuthorUpdateSchema)
+from backend.shitsu.app.schemas.author import AuthorCreateSchema, AuthorUpdateSchema
 from backend.shitsu.service.author_service import AuthorService
 
 author = APIRouter(prefix="/authors")

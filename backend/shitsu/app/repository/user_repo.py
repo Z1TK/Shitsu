@@ -20,7 +20,7 @@ class UserRepository(BaseRepository[User]):
         )
         obj = await session.execute(stmt)
         return obj.scalar_one_or_none()
-    
+
     @classmethod
     @connection()
     async def update_by_email(cls, session: AsyncSession, model_email: str, **kwargs):

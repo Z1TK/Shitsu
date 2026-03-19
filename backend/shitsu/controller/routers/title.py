@@ -3,30 +3,43 @@ from typing import Annotated
 from fastapi import APIRouter, Query, status
 from fastapi.responses import JSONResponse
 
-from backend.shitsu.app.schemas.title import (TitleCreateSchema,
-                                              TitleUpdateSchema)
+from backend.shitsu.app.schemas.title import TitleCreateSchema, TitleUpdateSchema
 from backend.shitsu.service.title_service import TitleService
 
 title = APIRouter(prefix="/titles")
 
 
-@title.get("")
+@title.get("/catalog")
 async def get_all(
     page: Annotated[int, Query(ge=1)] = 1,
     limit: Annotated[int, Query(ge=1, le=100)] = 10,
-    type: Annotated[str | None, Query()] = None,
-    status: Annotated[str | None, Query()] = None,
-    release_format: Annotated[str | None, Query()] = None,
+    type: Annotated[list[str] | None, Query()] = None,
+    status: Annotated[list[str] | None, Query()] = None,
+    release_format: Annotated[list[str] | None, Query()] = None,
     genres: Annotated[list[int] | None, Query()] = None,
     tags: Annotated[list[int] | None, Query()] = None,
+    year_min: int | None = None,
+    year_max: int | None = None,
+    genres_soft_search: bool | None = None,
+    tags_soft_search: bool | None = None,
 ):
     return await TitleService.get_all_titles(
-        page, limit, type, status, release_format, genres, tags
+        page,
+        limit,
+        type,
+        status,
+        release_format,
+        genres,
+        tags,
+        year_min,
+        year_max,
+        genres_soft_search,
+        tags_soft_search,
     )
 
 
 @title.get("/{title_id}")
-async def get_by_id(title_id: int):
+async def get_by_id(title_id: int, section: str = "info"):
     return await TitleService.get_title_by_id(title_id)
 
 

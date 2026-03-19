@@ -45,7 +45,8 @@ def validate_token(token: str):
 
     if not required_field:
         raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED, detail="Required field not found in token"
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Required field not found in token",
         )
 
     return required_field

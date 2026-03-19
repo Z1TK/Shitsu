@@ -1,7 +1,6 @@
 import uuid
 
-from sqlalchemy import (ARRAY, Boolean, Float, ForeignKey, Integer, String,
-                        Text, event)
+from sqlalchemy import ARRAY, Boolean, Float, ForeignKey, Integer, String, Text, event
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
 from backend.shitsu.app.models.base_mode import Base

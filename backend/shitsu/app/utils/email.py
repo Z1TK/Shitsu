@@ -30,6 +30,7 @@ def send_verification_email(email: str, token: str):
         }
     )
 
+
 def new_user_password(email: str, token: str):
     link = f"http://localhost:8000/api/account/change_password?token={token}"
     message = reset_password.render(reset_link=link)
@@ -42,11 +43,13 @@ def new_user_password(email: str, token: str):
         }
     )
 
+
 @app.task
 def send_email_verify(email: str):
     expire_time = timedelta(days=settings.VERIFY_TIME)
     token = create_token(data={"sub": str(email)}, expires_delta=expire_time)
     send_verification_email(email, token)
+
 
 @app.task
 def send_email_reset(email: str):
